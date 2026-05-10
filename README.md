@@ -1,13 +1,13 @@
 # Spring AI Practical
 
-Simple Spring Boot REST API that sends a user message to OpenAI using Spring AI and returns the AI response as JSON.
+Simple Spring Boot REST API that sends a JSON user message to OpenAI using Spring AI and returns the AI response as JSON.
 
 ## What This Project Does
 
 Flow:
 
 ```text
-User sends message
+User sends JSON message
     -> Spring Boot controller receives request
     -> Service layer calls Spring AI ChatModel
     -> Spring AI sends request to OpenAI
@@ -159,13 +159,15 @@ http://localhost:8080/api/ai/chat
 Request body type:
 
 ```text
-text/plain
+application/json
 ```
 
 Example request body:
 
-```text
-Explain Spring Boot in simple words
+```json
+{
+  "message": "What is Spring Boot?"
+}
 ```
 
 Example JSON response:
@@ -182,8 +184,8 @@ Windows PowerShell:
 
 ```powershell
 curl -X POST "http://localhost:8080/api/ai/chat" `
-  -H "Content-Type: text/plain" `
-  -d "Explain Spring AI in simple words"
+  -H "Content-Type: application/json" `
+  -d '{ "message": "What is Spring Boot?" }'
 ```
 
 ## Test With Postman
@@ -193,8 +195,11 @@ Use these values:
 ```text
 Method: POST
 URL: http://localhost:8080/api/ai/chat
-Header: Content-Type = text/plain
-Body: Explain Spring AI in simple words
+Header: Content-Type = application/json
+Body:
+{
+  "message": "What is Spring Boot?"
+}
 ```
 
 ## Controller Layer
@@ -202,16 +207,23 @@ Body: Explain Spring AI in simple words
 `AiChatController` receives the HTTP request.
 
 ```java
-@PostMapping(value = "/chat", produces = MediaType.APPLICATION_JSON_VALUE)
-public Map<String, String> chat(@RequestBody String message) {
-    return Map.of("answer", chatService.chat(message));
+public record ChatRequest(String message) {
+}
+
+@PostMapping(
+        value = "/chat",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
+public Map<String, String> chat(@RequestBody ChatRequest request) {
+    return Map.of("answer", chatService.chat(request.message()));
 }
 ```
 
 Meaning:
 
-- Request body is a plain string.
-- No request DTO is needed.
+- Request body is JSON.
+- JSON contains the user question in the `message` field.
 - Response is returned as JSON using `Map`.
 
 ## Service Layer
@@ -261,4 +273,10 @@ This project is a simple Spring AI demo:
 Spring Boot REST API + Spring AI + OpenAI
 ```
 
-It accepts a plain text message and returns the AI-generated answer as JSON.
+It accepts a JSON message request and returns the AI-generated answer as JSON.
+
+## Helpful Links
+
+[![YouTube](https://img.shields.io/badge/YouTube-ByteAndBeyondWithUday-red?logo=youtube&logoColor=white&style=flat-square)](https://www.youtube.com/@ByteAndBeyondWithUday)
+
+[![Postman](https://img.shields.io/badge/Postman-Collection-orange?logo=postman&style=flat-square)](https://www.postman.com/planetary-water-884580/workspace/uday-s-public-workspace/folder/1581944-66664716-9cc6-4277-9df6-de9cf356b3e0?action=share&source=copy-link&creator=1581944)
