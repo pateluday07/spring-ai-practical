@@ -4,7 +4,7 @@
 
 <h2 style="color:#16a34a;">2. Explain POM</h2>
 
-<h2 style="color:#dc2626;">3. Explain application.yaml</h2>
+<h2 style="color:#dc2626;">3. Add config in application.yaml</h2>
 
 <h2 style="color:#9333ea;">4. Create service layer</h2>
 
