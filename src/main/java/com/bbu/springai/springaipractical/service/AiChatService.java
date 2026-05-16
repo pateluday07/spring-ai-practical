@@ -1,7 +1,9 @@
 package com.bbu.springai.springaipractical.service;
 
+import com.bbu.springai.springaipractical.dto.ChatRequest;
+
 public interface AiChatService {
 
-    String chat(String message);
+    String chat(ChatRequest request);
 
 }

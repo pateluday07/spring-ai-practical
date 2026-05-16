@@ -2,6 +2,7 @@ spring:
   application:
     name: spring-ai-practical
   ai:
+    system: ${SPRING_AI_SYSTEM:You are a helpful assistant. Answer clearly, accurately, and concisely. Format responses with short paragraphs, bullet points, and Markdown headings when helpful.}
     model:
       chat: openai
     openai:
