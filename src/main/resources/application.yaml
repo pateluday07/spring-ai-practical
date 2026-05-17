@@ -10,4 +10,5 @@ spring:
       chat:
         options:
           model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+          temperature: ${OPENAI_TEMPERATURE:1.0}
           max-completion-tokens: ${OPENAI_MAX_COMPLETION_TOKENS:500}
