@@ -14,9 +14,13 @@ public class OpenAiChatModelConfig {
     @Bean
     @Primary
     public ChatModel chatModelWithoutDefaultTemperature(OpenAiChatModel openAiChatModel,
-                                                       @Value("${spring.ai.openai.chat.options.model}") String defaultModel) {
+                                                       @Value("${spring.ai.openai.chat.options.model}") String defaultModel,
+                                                       @Value("${spring.ai.openai.chat.options.max-completion-tokens}") Integer defaultMaxCompletionTokens) {
         return openAiChatModel.mutate()
-                .defaultOptions(OpenAiChatOptions.builder().model(defaultModel).build())
+                .defaultOptions(OpenAiChatOptions.builder()
+                        .model(defaultModel)
+                        .maxCompletionTokens(defaultMaxCompletionTokens)
+                        .build())
                 .build();
     }
 }

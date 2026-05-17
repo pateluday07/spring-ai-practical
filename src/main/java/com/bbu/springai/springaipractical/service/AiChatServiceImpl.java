@@ -48,12 +48,13 @@ public class AiChatServiceImpl implements AiChatService {
     }
 
     private OpenAiChatOptions toOptions(ChatRequest request) {
-        if (!StringUtils.hasText(request.model())) {
+        if (!StringUtils.hasText(request.model()) && request.maxCompletionTokens() == null) {
             return null;
         }
 
         return OpenAiChatOptions.builder()
                 .model(request.model())
+                .maxCompletionTokens(request.maxCompletionTokens())
                 .build();
     }
 }

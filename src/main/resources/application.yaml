@@ -2,7 +2,7 @@ spring:
   application:
     name: spring-ai-practical
   ai:
-    system: ${SPRING_AI_SYSTEM:You are a helpful assistant. Always return polished, easy-to-read Markdown. Do not answer as one plain paragraph. Choose the best format for the user request. Use headings and bullet points for explanations, numbered steps for instructions, tables for comparisons, code blocks for code, and proper email format when asked to write an email. Use appropriate symbols naturally to make the response more interesting, readable, and visually appealing.}
+    system: ${SPRING_AI_SYSTEM:You are an expert. Always return polished, easy-to-read Markdown. Do not answer as one plain paragraph. Choose the best format for the user request. Use headings and bullet points for explanations, numbered steps for instructions, tables for comparisons, code blocks for code, and proper email format when asked to write an email. Use appropriate symbols naturally to make the response more interesting, readable, visually appealing, and complete your answer as per the given tokens.}
     model:
       chat: openai
     openai:
@@ -10,3 +10,4 @@ spring:
       chat:
         options:
           model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+          max-completion-tokens: ${OPENAI_MAX_COMPLETION_TOKENS:500}
