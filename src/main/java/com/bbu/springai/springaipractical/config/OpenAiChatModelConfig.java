@@ -16,9 +16,7 @@ public class OpenAiChatModelConfig {
     public ChatModel chatModelWithoutDefaultTemperature(OpenAiChatModel openAiChatModel,
                                                        @Value("${spring.ai.openai.chat.options.model}") String defaultModel) {
         return openAiChatModel.mutate()
-                .defaultOptions(OpenAiChatOptions.builder()
-                        .model(defaultModel)
-                        .build())
+                .defaultOptions(OpenAiChatOptions.builder().model(defaultModel).build())
                 .build();
     }
 }
