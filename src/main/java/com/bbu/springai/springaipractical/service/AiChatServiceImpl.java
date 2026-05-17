@@ -20,15 +20,10 @@ public class AiChatServiceImpl implements AiChatService {
 
     private final ChatModel chatModel;
 
-    private final String defaultModel;
-
     private final String defaultSystem;
 
-    public AiChatServiceImpl(ChatModel chatModel,
-                             @Value("${spring.ai.openai.chat.options.model}") String defaultModel,
-                             @Value("${spring.ai.system}") String defaultSystem) {
+    public AiChatServiceImpl(ChatModel chatModel, @Value("${spring.ai.system}") String defaultSystem) {
         this.chatModel = chatModel;
-        this.defaultModel = defaultModel;
         this.defaultSystem = defaultSystem;
     }
 
@@ -53,10 +48,12 @@ public class AiChatServiceImpl implements AiChatService {
     }
 
     private OpenAiChatOptions toOptions(ChatRequest request) {
-        String model = StringUtils.hasText(request.model()) ? request.model() : defaultModel;
+        if (!StringUtils.hasText(request.model())) {
+            return null;
+        }
 
         return OpenAiChatOptions.builder()
-                .model(model)
+                .model(request.model())
                 .build();
     }
 }
