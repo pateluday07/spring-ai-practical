@@ -1,282 +1,97 @@
 # Spring AI Practical
 
-Simple Spring Boot REST API that sends a JSON user message to OpenAI using Spring AI and returns the AI response as JSON.
+Spring Boot REST API that sends structured chat requests to OpenAI via Spring AI and returns Markdown responses as JSON.
 
-## What This Project Does
+**Flow:** Client → `AiChatController` → `AiChatServiceImpl` (Prompt + `OpenAiChatOptions`) → Spring AI `ChatModel` → OpenAI → `{ "response": "..." }`
 
-Flow:
+**Stack:** Java 21 · Spring Boot 3.5.14 · Spring AI 1.1.5 · OpenAI · Maven
 
-```text
-User sends JSON message
-    -> Spring Boot controller receives request
-    -> Service layer calls Spring AI ChatModel
-    -> Spring AI sends request to OpenAI
-    -> API returns AI answer as JSON
-```
+## Quick Start
 
-Example response:
-
-```json
-{
-  "answer": "Spring Boot is a framework that helps you build Java applications quickly..."
-}
-```
-
-## Tech Stack
-
-- Java 21
-- Spring Boot 3.5.14
-- Spring AI 1.1.5
-- OpenAI Chat Model
-- Maven
-
-## Project Structure
-
-```text
-src/main/java/com/bbu/springai/springaipractical
-  controller
-    AiChatController.java
-  service
-    AiChatService.java
-    AiChatServiceImpl.java
-  SpringAiPracticalApplication.java
-
-src/main/resources
-  application.yaml
-```
-
-## Dependencies
-
-Main dependencies in `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.ai</groupId>
-    <artifactId>spring-ai-starter-model-openai</artifactId>
-</dependency>
-```
-
-Meaning:
-
-- `spring-boot-starter-web` is used to create REST APIs.
-- `spring-ai-starter-model-openai` is used to connect Spring Boot with OpenAI.
-
-## Configuration
-
-Configuration is available in:
-
-```text
-src/main/resources/application.yaml
-```
-
-Current config:
-
-```yaml
-spring:
-  application:
-    name: spring-ai-practical
-  ai:
-    model:
-      chat: openai
-    openai:
-      api-key: ${OPENAI_API_KEY:add-your-api-key-here}
-      chat:
-        options:
-          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
-          temperature: ${OPENAI_TEMPERATURE:0.7}
-          max-tokens: ${OPENAI_MAX_TOKENS:500}
-```
-
-Explanation:
-
-- `spring.ai.model.chat: openai` tells Spring AI to use OpenAI for chat.
-- `api-key` reads the OpenAI API key from the environment variable `OPENAI_API_KEY`.
-- `model` is the OpenAI model name. Default is `gpt-4o-mini`.
-- `temperature` controls creativity. Lower value gives more predictable answers.
-- `max-tokens` controls the maximum response length.
-
-## OpenAI API Key
-
-Create an API key from:
-
-```text
-https://platform.openai.com/api-keys
-```
-
-Do not hardcode your real API key inside `application.yaml`.
-
-Set the API key using an environment variable.
-
-Windows PowerShell:
+1. Get an API key: https://platform.openai.com/api-keys
+2. Set env vars (PowerShell, same session):
 
 ```powershell
 $env:OPENAI_API_KEY = "your-api-key-here"
+# optional: OPENAI_CHAT_MODEL, OPENAI_TEMPERATURE, OPENAI_MAX_COMPLETION_TOKENS, SPRING_AI_SYSTEM
 ```
 
-Optional environment variables:
+3. Run: `mvn spring-boot:run` → http://localhost:8080
 
-```powershell
-$env:OPENAI_CHAT_MODEL = "gpt-4o-mini"
-$env:OPENAI_TEMPERATURE = "0.7"
-$env:OPENAI_MAX_TOKENS = "500"
+Do not hardcode secrets in `application.yaml`.
+
+## API
+
+`POST /api/ai/chat` · `Content-Type: application/json`
+
+**Request** — all fields except `prompt` are optional (YAML defaults apply when omitted):
+
+| Field | Description |
+|-------|-------------|
+| `prompt` | User message |
+| `system` | System instruction (default: `spring.ai.system`) |
+| `model` | Model override |
+| `temperature` | Randomness |
+| `maxCompletionTokens` | Max output tokens |
+
+```json
+{ "prompt": "What is horsepower?" }
 ```
-
-These values work only in the same PowerShell window where you set them.
-
-## Run The Application
-
-Start the app:
-
-```powershell
-mvn spring-boot:run
-```
-
-Default server URL:
-
-```text
-http://localhost:8080
-```
-
-## API Endpoint
-
-### Chat API
-
-```text
-POST /api/ai/chat
-```
-
-Full URL:
-
-```text
-http://localhost:8080/api/ai/chat
-```
-
-Request body type:
-
-```text
-application/json
-```
-
-Example request body:
 
 ```json
 {
-  "message": "What is Spring Boot?"
+  "prompt": "What is horsepower?",
+  "system": "You are a helpful assistant.",
+  "model": "gpt-4o-mini",
+  "temperature": 1.0,
+  "maxCompletionTokens": 300
 }
 ```
 
-Example JSON response:
+**Response:** `{ "response": "..." }` (Markdown by default)
 
-```json
-{
-  "answer": "Spring Boot is a Java framework that helps developers create applications quickly..."
-}
-```
-
-## Test With curl
-
-Windows PowerShell:
+**Test (PowerShell):**
 
 ```powershell
 curl -X POST "http://localhost:8080/api/ai/chat" `
   -H "Content-Type: application/json" `
-  -d '{ "message": "What is Spring Boot?" }'
+  -d '{ "prompt": "What is horsepower?" }'
 ```
 
-## Test With Postman
+## Configuration
 
-Use these values:
+See `src/main/resources/application.yaml`. Key settings:
+
+- `spring.ai.system` — default system prompt
+- `spring.ai.openai.api-key` — from `OPENAI_API_KEY`
+- `spring.ai.openai.chat.options` — `model`, `temperature`, `max-completion-tokens`
+
+## Project Layout
 
 ```text
-Method: POST
-URL: http://localhost:8080/api/ai/chat
-Header: Content-Type = application/json
-Body:
-{
-  "message": "What is Spring Boot?"
-}
+controller/AiChatController.java
+dto/ChatRequest.java
+service/AiChatService.java, AiChatServiceImpl.java
+SpringAiPracticalApplication.java
+application.yaml
 ```
 
-## Controller Layer
+Request overrides (`model`, `temperature`, `maxCompletionTokens`) build `OpenAiChatOptions` only when present; otherwise YAML defaults are used.
 
-`AiChatController` receives the HTTP request.
-
-```java
-public record ChatRequest(String message) {
-}
-
-@PostMapping(
-        value = "/chat",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
-)
-public Map<String, String> chat(@RequestBody ChatRequest request) {
-    return Map.of("answer", chatService.chat(request.message()));
-}
-```
-
-Meaning:
-
-- Request body is JSON.
-- JSON contains the user question in the `message` field.
-- Response is returned as JSON using `Map`.
-
-## Service Layer
-
-`AiChatServiceImpl` calls Spring AI.
-
-```java
-@Override
-public String chat(String message) {
-    return chatModel.call(message);
-}
-```
-
-Meaning:
-
-- `ChatModel` is provided by Spring AI.
-- `chatModel.call(message)` sends the message to OpenAI.
-- The AI response is returned as a string.
-
-## Important Notes
-
-- OpenAI API may require credits or billing.
-- Keep your API key secret.
-- Do not expose API keys in frontend code.
-- Use environment variables for secrets.
-- For a completely free local demo, you can use Ollama instead of OpenAI, but that requires changing the dependency and configuration.
-
-## Build And Test
-
-Run tests:
+## Build
 
 ```powershell
 mvn test
-```
-
-Build the project:
-
-```powershell
 mvn clean package
 ```
 
-## Summary
+## Notes
 
-This project is a simple Spring AI demo:
+- OpenAI may require billing/credits.
+- Keep API keys in env vars, not frontend code.
+- Some models only support default temperature — use `1.0` for compatibility.
 
-```text
-Spring Boot REST API + Spring AI + OpenAI
-```
-
-It accepts a JSON message request and returns the AI-generated answer as JSON.
-
-## Helpful Links
+## Links
 
 [![YouTube](https://img.shields.io/badge/YouTube-ByteAndBeyondWithUday-red?logo=youtube&logoColor=white&style=flat-square)](https://www.youtube.com/@ByteAndBeyondWithUday)
-
-[![Postman](https://img.shields.io/badge/Postman-Collection-orange?logo=postman&style=flat-square)](https://www.postman.com/planetary-water-884580/workspace/uday-s-public-workspace/folder/1581944-66664716-9cc6-4277-9df6-de9cf356b3e0?action=share&source=copy-link&creator=1581944)
+[![Postman](https://img.shields.io/badge/Postman-Collection-orange?logo=postman&style=flat-square)](https://www.postman.com/planetary-water-884580/workspace/uday-s-public-workspace/folder/1581944-4ffcb36e-0f2d-4e93-8f7d-986000761292?action=share&source=copy-link&creator=1581944)
