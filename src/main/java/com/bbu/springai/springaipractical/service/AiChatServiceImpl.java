@@ -11,6 +11,7 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,19 @@ public class AiChatServiceImpl implements AiChatService {
         Prompt prompt = toPrompt(request);
         ChatResponse response = chatModel.call(prompt);
         return response.getResult().getOutput().getText();
+    }
+
+    @Override
+    public Flux<String> stream(ChatRequest request) {
+        Prompt prompt = toPrompt(request);
+        return chatModel.stream(prompt)
+                .mapNotNull(response -> {
+                    if (response.getResult() == null) {
+                        return null;
+                    }
+                    return response.getResult().getOutput().getText();
+                })
+                .filter(text -> !text.isEmpty());
     }
 
     private Prompt toPrompt(ChatRequest request) {

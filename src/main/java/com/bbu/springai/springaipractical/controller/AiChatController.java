@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
@@ -23,6 +24,16 @@ public class AiChatController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> chat(@RequestBody ChatRequest request) {
         return Map.of("response", chatService.chat(request));
+    }
+
+    @PostMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> stream(@RequestBody ChatRequest request) {
+        return chatService.stream(request);
+    }
+
+    @PostMapping(path = "/stream-text", produces = MediaType.TEXT_PLAIN_VALUE)
+    public Flux<String> streamText(@RequestBody ChatRequest request) {
+        return chatService.stream(request);
     }
 
 }
