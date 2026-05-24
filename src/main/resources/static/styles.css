@@ -62,6 +62,21 @@ textarea {
     letter-spacing: 0;
 }
 
+.channel-name {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 12px;
+    padding: 9px 16px;
+    border: 2px solid rgba(15, 107, 95, 0.28);
+    border-radius: 8px;
+    background: #dff4ef;
+    color: #084c45;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
 .topbar p {
     margin: 6px 0 0;
     color: var(--muted);
