@@ -45,7 +45,7 @@ function setBusy(isBusy) {
 function resetOutput() {
     chunkCount = 0;
     rawResponse = "";
-    responseOutput.textContent = "";
+    responseOutput.replaceChildren();
     chunkList.replaceChildren();
     tokenCounter.textContent = "0 chunks";
     elapsedTime.textContent = "0.0s";
@@ -115,11 +115,11 @@ async function streamResponse(requestBody) {
     timer = window.setInterval(updateElapsed, 100);
     updateElapsed();
 
-    const response = await fetch("/api/ai/chat/stream-text", {
+    const response = await fetch("/api/ai/chat/stream", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Accept": "text/plain"
+            "Accept": "text/event-stream"
         },
         body: JSON.stringify(requestBody),
         signal: controller.signal
@@ -131,6 +131,7 @@ async function streamResponse(requestBody) {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
+    let sseBuffer = "";
 
     while (true) {
         const { value, done } = await reader.read();
@@ -139,11 +140,42 @@ async function streamResponse(requestBody) {
             break;
         }
 
-        appendChunk(decoder.decode(value, { stream: true }));
+        sseBuffer = parseSseBuffer(sseBuffer + decoder.decode(value, { stream: true }));
     }
 
-    const finalText = decoder.decode();
-    appendChunk(finalText);
+    sseBuffer = parseSseBuffer(sseBuffer + decoder.decode());
+
+    if (sseBuffer.trim()) {
+        appendSseEvent(sseBuffer);
+    }
+}
+
+function parseSseBuffer(buffer) {
+    const normalized = buffer.replace(/\r\n/g, "\n");
+    const events = normalized.split("\n\n");
+    const pending = events.pop() || "";
+
+    events.forEach(appendSseEvent);
+    return pending;
+}
+
+function appendSseEvent(eventBlock) {
+    const dataLines = eventBlock
+        .split("\n")
+        .filter(line => line.startsWith("data:"))
+        .map(line => line.slice(5));
+
+    if (dataLines.length === 0) {
+        return;
+    }
+
+    const data = dataLines.join("\n");
+
+    if (data === "[DONE]") {
+        return;
+    }
+
+    appendChunk(data);
 }
 
 form.addEventListener("submit", async (event) => {

@@ -31,9 +31,4 @@ public class AiChatController {
         return chatService.stream(request);
     }
 
-    @PostMapping(path = "/stream-text", produces = MediaType.TEXT_PLAIN_VALUE)
-    public Flux<String> streamText(@RequestBody ChatRequest request) {
-        return chatService.stream(request);
-    }
-
 }

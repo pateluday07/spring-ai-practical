@@ -240,6 +240,14 @@ button:disabled {
     font-weight: 700;
 }
 
+.response-tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
 .response-output {
     flex: 1;
     min-height: 0;
