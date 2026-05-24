@@ -20,7 +20,10 @@
         <section class="chat-layout">
             <form class="composer" id="chatForm">
                 <label for="prompt">Prompt</label>
-                <textarea id="prompt" name="prompt" rows="7">Which Ferrari model is best?</textarea>
+                <textarea class="prompt-input" id="prompt" name="prompt" rows="7">How does Kubernetes handle self-healing?</textarea>
+
+                <label for="system">System instructions</label>
+                <textarea class="system-input" id="system" name="system" rows="4" placeholder="Optional. Leave blank to use application.yaml default."></textarea>
 
                 <div class="settings-grid">
                     <label>

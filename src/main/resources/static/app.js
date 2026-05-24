@@ -1,5 +1,6 @@
 const form = document.querySelector("#chatForm");
 const promptInput = document.querySelector("#prompt");
+const systemInput = document.querySelector("#system");
 const modelInput = document.querySelector("#model");
 const maxTokensInput = document.querySelector("#maxCompletionTokens");
 const temperatureInput = document.querySelector("#temperature");
@@ -37,6 +38,7 @@ function setBusy(isBusy) {
     sendButton.disabled = isBusy;
     stopButton.disabled = !isBusy;
     promptInput.disabled = isBusy;
+    systemInput.disabled = isBusy;
     modelInput.disabled = isBusy;
     maxTokensInput.disabled = isBusy;
     temperatureInput.disabled = isBusy;
@@ -101,12 +103,20 @@ function renderResponse() {
 }
 
 function buildRequestBody() {
-    return {
+    const requestBody = {
         prompt: promptInput.value.trim(),
         model: modelInput.value.trim() || null,
         maxCompletionTokens: Number(maxTokensInput.value),
         temperature: Number(temperatureInput.value)
     };
+
+    const system = systemInput.value.trim();
+
+    if (system) {
+        requestBody.system = system;
+    }
+
+    return requestBody;
 }
 
 async function streamResponse(requestBody) {

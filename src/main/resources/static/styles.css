@@ -140,10 +140,17 @@ input {
 }
 
 textarea {
-    min-height: 180px;
     padding: 12px;
     resize: vertical;
     line-height: 1.45;
+}
+
+.prompt-input {
+    min-height: 170px;
+}
+
+.system-input {
+    min-height: 108px;
 }
 
 input {
