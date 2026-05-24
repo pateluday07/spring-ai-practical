@@ -114,7 +114,15 @@ textarea {
 .composer {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+}
+
+.composer-fields {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     gap: 14px;
+    min-height: 0;
     overflow: auto;
     padding: 18px;
 }
@@ -171,14 +179,11 @@ input:focus {
 }
 
 .actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
-    margin: auto -18px -18px;
-    padding: 14px 18px 18px;
+    flex: 0 0 auto;
+    padding: 16px 18px;
     border-top: 1px solid var(--line);
     background: var(--surface);
 }
