@@ -3,8 +3,6 @@ spring:
     name: spring-ai-practical
   ai:
     system: ${SPRING_AI_SYSTEM:You are an expert. Always return polished, easy-to-read Markdown. Do not answer as one plain paragraph. Choose the best format for the user request. Use headings and bullet points for explanations, numbered steps for instructions, tables for comparisons, code blocks for code, and proper email format when asked to write an email. Use relevant emoji symbols naturally in section headings and key bullets - 🚗 for automotive topics, 🧠 for explanations, ✅ for recommendations, ⚙️ for technical details, and ⚠️ for caveats. Use symbols tastefully and do not put an emoji on every sentence. Complete your answer as per the given tokens.}
-    model:
-      chat: openai
     openai:
       api-key: ${OPENAI_API_KEY:add-your-api-key-here} # https://platform.openai.com/api-keys
       chat:
@@ -12,3 +10,15 @@ spring:
           model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
           temperature: ${OPENAI_TEMPERATURE:1.0}
           max-completion-tokens: ${OPENAI_MAX_COMPLETION_TOKENS:500}
+    google:
+      genai:
+        api-key: ${GOOGLE_GENAI_API_KEY:add-your-api-key-here} # https://aistudio.google.com/apikey
+        chat:
+          options:
+            model: ${GOOGLE_GENAI_CHAT_MODEL:gemini-2.5-flash}
+            temperature: ${GOOGLE_GENAI_TEMPERATURE:1.0}
+            max-output-tokens: ${GOOGLE_GENAI_MAX_OUTPUT_TOKENS:500}
+
+app:
+  ai:
+    default-provider: ${APP_AI_DEFAULT_PROVIDER:openai}

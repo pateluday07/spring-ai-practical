@@ -29,8 +29,15 @@
 
                     <div class="settings-grid">
                         <label>
+                            Provider
+                            <select id="provider" name="provider">
+                                <option value="openai" selected>OpenAI</option>
+                                <option value="gemini">Google (Gemini)</option>
+                            </select>
+                        </label>
+                        <label>
                             Model
-                            <input id="model" name="model" value="gpt-5.4-nano" autocomplete="off">
+                            <input id="model" name="model" value="gpt-4o-mini" autocomplete="off">
                         </label>
                         <label>
                             Max tokens

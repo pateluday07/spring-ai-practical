@@ -1,6 +1,7 @@
 const form = document.querySelector("#chatForm");
 const promptInput = document.querySelector("#prompt");
 const systemInput = document.querySelector("#system");
+const providerInput = document.querySelector("#provider");
 const modelInput = document.querySelector("#model");
 const maxTokensInput = document.querySelector("#maxCompletionTokens");
 const temperatureInput = document.querySelector("#temperature");
@@ -19,6 +20,11 @@ let chunkCount = 0;
 let startedAt = 0;
 let timer = null;
 let rawResponse = "";
+
+const providerDefaults = {
+    openai: "gpt-4o-mini",
+    gemini: "gemini-2.0-flash"
+};
 
 if (window.marked) {
     window.marked.use({
@@ -39,6 +45,7 @@ function setBusy(isBusy) {
     stopButton.disabled = !isBusy;
     promptInput.disabled = isBusy;
     systemInput.disabled = isBusy;
+    providerInput.disabled = isBusy;
     modelInput.disabled = isBusy;
     maxTokensInput.disabled = isBusy;
     temperatureInput.disabled = isBusy;
@@ -105,6 +112,7 @@ function renderResponse() {
 function buildRequestBody() {
     const requestBody = {
         prompt: promptInput.value.trim(),
+        provider: providerInput.value,
         model: modelInput.value.trim() || null,
         maxCompletionTokens: Number(maxTokensInput.value),
         temperature: Number(temperatureInput.value)
@@ -234,4 +242,8 @@ stopButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
     resetOutput();
     setStatus("Idle", "Ready", "idle");
+});
+
+providerInput.addEventListener("change", () => {
+    modelInput.value = providerDefaults[providerInput.value] || "";
 });
