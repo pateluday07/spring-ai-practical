@@ -23,7 +23,7 @@ let rawResponse = "";
 
 const providerDefaults = {
     openai: "gpt-4o-mini",
-    gemini: "gemini-2.0-flash"
+    gemini: "gemini-2.5-flash"
 };
 
 if (window.marked) {
