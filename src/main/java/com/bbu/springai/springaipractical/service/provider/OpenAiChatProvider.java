@@ -30,7 +30,7 @@ public class OpenAiChatProvider implements ChatProvider {
 
     @Override
     public ChatOptions toOptions(ChatRequest request) {
-        if (request.hasModelOverrides()) {
+        if (request.hasNoModelOverrides()) {
             return null;
         }
 

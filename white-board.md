@@ -16,7 +16,7 @@
 
 - add `provider` field
 - keep `model`, `temperature`, `maxCompletionTokens` for per-request overrides
-- add `hasModelOverrides()` helper
+- add `hasNoModelOverrides()` helper
 
 <h2 style="color:#16a34a;">4. Create ChatProvider Interface</h2>
 

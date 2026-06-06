@@ -10,7 +10,7 @@ public record ChatRequest(
         Double temperature,
         Integer maxCompletionTokens) {
 
-    public boolean hasModelOverrides() {
+    public boolean hasNoModelOverrides() {
         return !StringUtils.hasText(model)
                 && temperature == null
                 && maxCompletionTokens == null;
