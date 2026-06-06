@@ -7,7 +7,7 @@ spring:
       api-key: ${OPENAI_API_KEY:add-your-api-key-here} # https://platform.openai.com/api-keys
       chat:
         options:
-          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+          model: ${OPENAI_CHAT_MODEL:gpt-5.4-nano}
           temperature: ${OPENAI_TEMPERATURE:1.0}
           max-completion-tokens: ${OPENAI_MAX_COMPLETION_TOKENS:500}
     google:
